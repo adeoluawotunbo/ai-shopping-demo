@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Joy AI — Smart Shopping Assistant Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet"/>
+<style>
+/* ── DESIGN SYSTEM ─────────────────────────────────────────────────────────
+   Aesthetic: Editorial dark luxury — deep navy base, electric violet accent
+   Font: Syne (display) + DM Sans (body)
+   Theme: Premium AI product demo — not a generic SaaS template
+────────────────────────────────────────────────────────────────────────── */
+:root{
+  --ink:    #0d0e1a;
+  --ink2:   #1a1b2e;
+  --ink3:   #252640;
+  --violet: #6C63FF;
+  --violet2:#5A52D5;
+  --violet3:#8B85FF;
+  --cream:  #f8f7ff;
+  --muted:  #8889aa;
+  --border: rgba(108,99,255,.15);
+  --white:  #ffffff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--ink);
+  color:var(--white);
+  font-family:'DM Sans',sans-serif;
+  overflow-x:hidden;
+  min-height:100vh;
+}
+
+/* ── NOISE TEXTURE OVERLAY ─────────────────────────────────────────────── */
+body::before{
+  content:'';
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity:.4;
+}
+
+/* ── NAV ───────────────────────────────────────────────────────────────── */
+nav{
+  position:sticky; top:0; z-index:100;
+  background:rgba(13,14,26,.85); backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:0 5%;
+  display:flex; align-items:center; height:68px; gap:24px;
+}
+.nav-logo{
+  font-family:'Syne',sans-serif; font-weight:800; font-size:1.4rem;
+  background:linear-gradient(135deg,var(--violet3),var(--violet));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  letter-spacing:-.5px; text-decoration:none;
+}
+.nav-badge{
+  font-size:.68rem; font-weight:600; padding:3px 10px; border-radius:20px;
+  background:rgba(108,99,255,.15); color:var(--violet3);
+  border:1px solid var(--border); letter-spacing:.5px;
+}
+.nav-links{ display:flex; gap:24px; margin-left:auto; }
+.nav-links a{
+  font-size:.84rem; color:var(--muted); text-decoration:none;
+  transition:color .2s; font-weight:500;
+}
+.nav-links a:hover{ color:var(--white); }
+.nav-cta{
+  padding:8px 20px; border-radius:24px; font-size:.82rem; font-weight:600;
+  background:var(--violet); color:#fff; text-decoration:none;
+  transition:background .2s, transform .2s;
+  border:none; cursor:pointer;
+}
+.nav-cta:hover{ background:var(--violet2); transform:translateY(-1px); }
+
+/* ── HERO ──────────────────────────────────────────────────────────────── */
+.hero{
+  position:relative; z-index:1;
+  padding:100px 5% 80px; text-align:center; overflow:hidden;
+}
+.hero-glow{
+  position:absolute; top:-60px; left:50%; transform:translateX(-50%);
+  width:700px; height:500px; border-radius:50%;
+  background:radial-gradient(ellipse,rgba(108,99,255,.25) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-eyebrow{
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:.78rem; font-weight:600; letter-spacing:1.5px; text-transform:uppercase;
+  color:var(--violet3); margin-bottom:24px;
+  padding:6px 16px; border-radius:20px;
+  background:rgba(108,99,255,.1); border:1px solid var(--border);
+}
+.hero-eyebrow::before{ content:''; width:6px; height:6px; border-radius:50%; background:var(--violet3); animation:blink 2s infinite; }
+@keyframes blink{ 0%,100%{opacity:1} 50%{opacity:.2} }
+.hero h1{
+  font-family:'Syne',sans-serif; font-size:clamp(2.8rem,6vw,5rem);
+  font-weight:800; line-height:1.08; letter-spacing:-2px;
+  margin-bottom:24px;
+}
+.hero h1 span{
+  background:linear-gradient(135deg,var(--violet3),#a78bfa,var(--violet));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+.hero p{
+  font-size:1.15rem; color:var(--muted); max-width:540px;
+  margin:0 auto 40px; line-height:1.7; font-weight:300;
+}
+.hero-actions{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+.btn-primary{
+  padding:14px 32px; border-radius:32px; font-size:.92rem; font-weight:600;
+  background:linear-gradient(135deg,var(--violet),var(--violet2));
+  color:#fff; border:none; cursor:pointer; transition:all .25s;
+  box-shadow:0 8px 24px rgba(108,99,255,.4);
+}
+.btn-primary:hover{ transform:translateY(-2px); box-shadow:0 12px 32px rgba(108,99,255,.5); }
+.btn-secondary{
+  padding:14px 32px; border-radius:32px; font-size:.92rem; font-weight:600;
+  background:transparent; color:var(--white);
+  border:1.5px solid rgba(255,255,255,.2); cursor:pointer; transition:all .25s;
+}
+.btn-secondary:hover{ border-color:var(--violet3); color:var(--violet3); }
+.hero-stats{
+  display:flex; justify-content:center; gap:48px;
+  margin-top:72px; padding-top:48px;
+  border-top:1px solid var(--border);
+  flex-wrap:wrap;
+}
+.stat{ text-align:center; }
+.stat-num{
+  font-family:'Syne',sans-serif; font-size:2.4rem; font-weight:800;
+  background:linear-gradient(135deg,var(--violet3),#fff);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  line-height:1;
+}
+.stat-label{ font-size:.78rem; color:var(--muted); margin-top:6px; font-weight:500; }
+
+/* ── CATEGORIES ─────────────────────────────────────────────────────────── */
+.section{ padding:72px 5%; position:relative; z-index:1; }
+.section-label{
+  font-size:.72rem; font-weight:700; letter-spacing:2px; text-transform:uppercase;
+  color:var(--violet3); margin-bottom:14px;
+}
+.section-title{
+  font-family:'Syne',sans-serif; font-size:2rem; font-weight:800;
+  letter-spacing:-1px; margin-bottom:36px;
+}
+.cats{
+  display:flex; gap:10px; overflow-x:auto; padding-bottom:6px;
+}
+.cats::-webkit-scrollbar{ height:2px; }
+.cats::-webkit-scrollbar-thumb{ background:var(--violet); border-radius:1px; }
+.cat-pill{
+  padding:8px 20px; border-radius:24px; font-size:.8rem; font-weight:600;
+  border:1.5px solid var(--border); color:var(--muted); background:transparent;
+  cursor:pointer; white-space:nowrap; transition:all .2s; flex-shrink:0;
+}
+.cat-pill:hover,.cat-pill.active{
+  background:var(--violet); border-color:var(--violet); color:#fff;
+}
+
+/* ── PRODUCT GRID ─────────────────────────────────────────────────────── */
+.product-grid{
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:16px;
+  margin-top:28px;
+}
+.product-card{
+  background:var(--ink2); border:1px solid var(--border);
+  border-radius:16px; overflow:hidden; cursor:pointer;
+  transition:all .25s; position:relative;
+}
+.product-card::before{
+  content:''; position:absolute; inset:0; border-radius:16px;
+  background:linear-gradient(135deg,var(--violet),transparent);
+  opacity:0; transition:opacity .25s;
+}
+.product-card:hover{ transform:translateY(-4px); border-color:var(--violet); box-shadow:0 12px 32px rgba(108,99,255,.2); }
+.product-card:hover::before{ opacity:.06; }
+.product-img{
+  width:100%; height:168px; background:var(--ink3);
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden; position:relative;
+}
+.product-img img{ width:100%; height:100%; object-fit:cover; }
+.product-img .cat-icon{ font-size:2.8rem; }
+.product-badge{
+  position:absolute; top:10px; left:10px;
+  font-size:.6rem; font-weight:700; padding:3px 9px; border-radius:6px;
+  background:rgba(108,99,255,.9); color:#fff; letter-spacing:.5px;
+  text-transform:uppercase;
+}
+.product-body{ padding:14px; }
+.product-name{
+  font-size:.82rem; font-weight:600; color:var(--white);
+  overflow:hidden; display:-webkit-box; -webkit-line-clamp:2;
+  -webkit-box-orient:vertical; line-height:1.4; margin-bottom:8px;
+}
+.product-price{
+  font-family:'Syne',sans-serif; font-size:1.05rem; font-weight:700;
+  color:var(--violet3); margin-bottom:6px;
+}
+.product-meta{ font-size:.68rem; color:var(--muted); margin-bottom:12px; }
+.add-btn{
+  width:100%; padding:9px; border-radius:10px; font-size:.78rem; font-weight:600;
+  background:rgba(108,99,255,.15); color:var(--violet3);
+  border:1px solid var(--border); cursor:pointer; transition:all .2s;
+}
+.add-btn:hover{ background:var(--violet); color:#fff; border-color:var(--violet); }
+
+/* ── HOW IT WORKS ──────────────────────────────────────────────────────── */
+.how-section{
+  padding:80px 5%; background:var(--ink2);
+  border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+  position:relative; z-index:1;
+}
+.how-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:24px; margin-top:40px; }
+.how-card{
+  padding:28px; border-radius:16px; background:var(--ink3);
+  border:1px solid var(--border); position:relative; overflow:hidden;
+}
+.how-card::before{
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg,var(--violet),transparent);
+}
+.how-num{
+  font-family:'Syne',sans-serif; font-size:2.8rem; font-weight:800;
+  color:var(--border); margin-bottom:16px; line-height:1;
+}
+.how-icon{ font-size:1.8rem; margin-bottom:14px; }
+.how-title{ font-family:'Syne',sans-serif; font-size:1rem; font-weight:700; margin-bottom:8px; }
+.how-text{ font-size:.83rem; color:var(--muted); line-height:1.6; }
+
+/* ── FOOTER ────────────────────────────────────────────────────────────── */
+footer{
+  padding:40px 5%; border-top:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:16px; position:relative; z-index:1;
+  font-size:.82rem; color:var(--muted);
+}
+footer .logo{ font-family:'Syne',sans-serif; font-weight:800; color:var(--violet3); }
+footer a{ color:var(--muted); text-decoration:none; transition:color .2s; }
+footer a:hover{ color:var(--violet3); }
+
+/* ── FLASH TICKER ──────────────────────────────────────────────────────── */
+.ticker{
+  background:linear-gradient(90deg,var(--violet2),var(--violet));
+  padding:10px 5%; font-size:.8rem; font-weight:600;
+  display:flex; align-items:center; gap:16px; overflow:hidden;
+  position:relative; z-index:1;
+}
+.ticker-label{
+  background:rgba(255,255,255,.2); padding:2px 10px; border-radius:4px;
+  font-size:.7rem; letter-spacing:1px; text-transform:uppercase; flex-shrink:0;
+}
+.ticker-text{ white-space:nowrap; animation:ticker 30s linear infinite; }
+@keyframes ticker{ 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+@media(max-width:600px){
+  .hero h1{ letter-spacing:-1px; }
+  .hero-stats{ gap:28px; }
+  nav .nav-links{ display:none; }
+  .product-grid{ grid-template-columns:repeat(2,1fr); }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#">Joy AI</a>
+  <span class="nav-badge">LIVE DEMO</span>
+  <div class="nav-links">
+    <a href="#products">Products</a>
+    <a href="#how">How it works</a>
+    <a href="mailto:adeoluawotunbo@gmail.com">Contact</a>
+  </div>
+  <button class="nav-cta" onclick="document.getElementById('joy-fab').click()">Try Joy →</button>
+</nav>
+
+<div class="ticker">
+  <span class="ticker-label">🔥 Live</span>
+  <span class="ticker-text">
+    AI-powered shopping · 24/7 availability · Natural language search · Smart recommendations · Human handoff built-in · WhatsApp integration ready ·
+    AI-powered shopping · 24/7 availability · Natural language search · Smart recommendations · Human handoff built-in · WhatsApp integration ready ·
+  </span>
+</div>
+
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-eyebrow">AI Shopping Assistant</div>
+  <h1>Meet <span>Joy</span> —<br>Your Smartest<br>Sales Agent</h1>
+  <p>Joy handles product discovery 24/7, recommends products by budget, and escalates to your team only when needed. Embed on any website with 2 lines of code.</p>
+  <div class="hero-actions">
+    <button class="btn-primary" onclick="document.getElementById('joy-fab').click()">
+      Chat with Joy →
+    </button>
+    <a href="mailto:adeoluawotunbo@gmail.com" class="btn-secondary">Get Joy for your store</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">Always online</div></div>
+    <div class="stat"><div class="stat-num">3s</div><div class="stat-label">Average response</div></div>
+    <div class="stat"><div class="stat-num">200+</div><div class="stat-label">Products indexed</div></div>
+    <div class="stat"><div class="stat-num">2</div><div class="stat-label">Lines to embed</div></div>
+  </div>
+</section>
+
+<section class="section" id="products">
+  <div class="section-label">Product Catalog</div>
+  <div class="section-title">Browse or ask Joy anything</div>
+  <div class="cats" id="catList"></div>
+  <div class="product-grid" id="productGrid"></div>
+</section>
+
+<section class="how-section" id="how">
+  <div style="max-width:1200px;margin:0 auto">
+    <div class="section-label">How it works</div>
+    <div class="section-title">Simple for customers.<br>Powerful underneath.</div>
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-num">01</div>
+        <div class="how-icon">💬</div>
+        <div class="how-title">Customer asks naturally</div>
+        <div class="how-text">"Phones under ₦80k" or "best laptop for school" — Joy understands exactly what they mean.</div>
+      </div>
+      <div class="how-card">
+        <div class="how-num">02</div>
+        <div class="how-icon">🔎</div>
+        <div class="how-title">AI finds best matches</div>
+        <div class="how-text">Vector search finds the most relevant products from your entire catalog in milliseconds.</div>
+      </div>
+      <div class="how-card">
+        <div class="how-num">03</div>
+        <div class="how-icon">🃏</div>
+        <div class="how-title">Product cards appear</div>
+        <div class="how-text">Photo, price in ₦, condition, seller location and a direct Buy button — all inside the chat.</div>
+      </div>
+      <div class="how-card">
+        <div class="how-num">04</div>
+        <div class="how-icon">👤</div>
+        <div class="how-title">Human handoff when needed</div>
+        <div class="how-text">Joy detects frustration, refund requests or complex issues and escalates to your team automatically.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="logo">Joy AI</span>
+  <span>Built by <a href="mailto:adeoluawotunbo@gmail.com">Amma Caesar Inc.</a></span>
+  <span>Powered by Claude AI · Supabase · Railway</span>
+</footer>
+
+<script>
+const BACKEND = "https://jumia-agent.up.railway.app";
+
+// Load products
+async function loadProducts(){
+  try{
+    const res = await fetch(BACKEND+"/api/products");
+    const data = await res.json();
+    const products = data.products||[];
+    renderCats(products);
+    renderGrid(products,"All");
+  }catch(e){
+    document.getElementById("productGrid").innerHTML=
+      '<p style="color:#8889aa;font-size:.85rem;grid-column:1/-1;padding:40px 0">Connect to backend to load products</p>';
+  }
+}
+
+const CAT_ICONS={
+  "Phones & Tablets":"📱","Laptops & Computers":"💻","TVs & Audio":"📺",
+  "Refrigerators & Freezers":"🧊","Generators & Power":"⚡","Air Conditioners":"❄️",
+  "Washing Machines":"🫧","Cameras & Photography":"📷","Fashion - Men":"👔",
+  "Fashion - Women":"👗","Baby & Kids":"🍼","Health & Beauty":"💊",
+  "Kitchen Appliances":"🍳","Gaming":"🎮","Networking & Storage":"🌐",
+  "Printers & Scanners":"🖨️","Tablets & Accessories":"📟",
+  "Automotive":"🚗","Tools & Home Improvement":"🔧",
+};
+
+let allProducts=[];
+
+function renderCats(products){
+  allProducts=products;
+  const cats=["All",...new Set(products.map(p=>p.category))];
+  document.getElementById("catList").innerHTML=cats.map(c=>
+    `<button class="cat-pill${c==="All"?" active":""}" onclick="filterCat('${c}',this)">${c}</button>`
+  ).join("");
+}
+
+function filterCat(cat,el){
+  document.querySelectorAll(".cat-pill").forEach(b=>b.classList.remove("active"));
+  el.classList.add("active");
+  renderGrid(allProducts,cat);
+}
+
+function renderGrid(products,cat){
+  const list=cat==="All"?products:products.filter(p=>p.category===cat);
+  const icon=p=>CAT_ICONS[p.category]||"🛒";
+  document.getElementById("productGrid").innerHTML=list.map(p=>`
+    <div class="product-card" onclick="askJoy('${p.name.replace(/'/g,"\\'")}')">
+      <div class="product-img">
+        <span class="product-badge">${p.condition}</span>
+        ${p.image
+          ? `<img src="${p.image}" alt="${p.name}" onerror="this.parentElement.innerHTML='<span class=\\"cat-icon\\">${icon(p)}</span>'" loading="lazy"/>`
+          : `<span class="cat-icon">${icon(p)}</span>`}
+      </div>
+      <div class="product-body">
+        <div class="product-name">${p.name}</div>
+        <div class="product-price">₦${Number(p.price).toLocaleString("en-NG")}</div>
+        <div class="product-meta">📍 ${p.location}</div>
+        <button class="add-btn">Ask Joy about this →</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+function askJoy(name){
+  document.getElementById("joy-fab").click();
+  setTimeout(()=>{
+    const input=document.getElementById("joy-input");
+    if(input){ input.value=`Tell me more about the ${name}`; input.dispatchEvent(new KeyboardEvent("keydown",{key:"Enter",bubbles:true})); }
+  },500);
+}
+
+loadProducts();
+</script>
+
+<!-- JOY AI WIDGET -->
+<script>
+  window.JOY_BACKEND  = "https://jumia-agent.up.railway.app";
+  window.JOY_COLOR    = "#6C63FF";
+  window.JOY_NAME     = "Joy";
+  window.JOY_STORE    = "our store";
+  window.JOY_GREETING = "👋 Hi! I'm Joy, your AI Shopping Assistant. Tell me what you're looking for — I'll find the best options and prices for you!";
+</script>
+<script src="https://jumia-agent.up.railway.app/widget.js"></script>
+
+</body>
+</html>
