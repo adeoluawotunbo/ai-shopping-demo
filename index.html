@@ -272,7 +272,7 @@ footer a:hover{ color:var(--violet3); }
   <div class="nav-links">
     <a href="#products">Products</a>
     <a href="#how">How it works</a>
-    <a href="mailto:adeoluawotunbo@gmail.com">Contact</a>
+    <a href="/cdn-cgi/l/email-protection#5a3b3e3f35362f3b2d352e2f3438351a3d373b333674393537">Contact</a>
   </div>
   <button class="nav-cta" onclick="document.getElementById('joy-fab').click()">Try Joy →</button>
 </nav>
@@ -294,7 +294,7 @@ footer a:hover{ color:var(--violet3); }
     <button class="btn-primary" onclick="document.getElementById('joy-fab').click()">
       Chat with Joy →
     </button>
-    <a href="mailto:adeoluawotunbo@gmail.com" class="btn-secondary">Get Joy for your store</a>
+    <a href="/cdn-cgi/l/email-protection#b9d8dddcd6d5ccd8ced6cdccd7dbd6f9ded4d8d0d597dad6d4" class="btn-secondary">Get Joy for your store</a>
   </div>
   <div class="hero-stats">
     <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">Always online</div></div>
@@ -346,12 +346,12 @@ footer a:hover{ color:var(--violet3); }
 
 <footer>
   <span class="logo">Joy AI</span>
-  <span>Built by <a href="mailto:adeoluawotunbo@gmail.com">Amma Caesar Inc.</a></span>
+  <span>Built by <a href="/cdn-cgi/l/email-protection#78191c1d17140d190f170c0d161a17381f15191114561b1715">Amma Caesar Inc.</a></span>
   <span>Powered by Claude AI · Supabase · Railway</span>
 </footer>
 
-<script>
-const BACKEND = "https://e-commercesalesagent.up.railway.app/";
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+const BACKEND = "https://jumia-agent.up.railway.app";
 
 // Load products
 async function loadProducts(){
@@ -401,8 +401,8 @@ function renderGrid(products,cat){
       <div class="product-img">
         <span class="product-badge">${p.condition}</span>
         ${p.image
-          ? `<img src="${p.image}" alt="${p.name}" onerror="this.parentElement.innerHTML='<span class=\\"cat-icon\\">${icon(p)}</span>'" loading="lazy"/>`
-          : `<span class="cat-icon">${icon(p)}</span>`}
+          ? `<img src="${p.image}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<span style=font-size:2.8rem>${icon(p)}</span>')"/>`
+          : `<span style="font-size:2.8rem">${icon(p)}</span>`}
       </div>
       <div class="product-body">
         <div class="product-name">${p.name}</div>
@@ -427,7 +427,7 @@ loadProducts();
 
 <!-- JOY AI WIDGET -->
 <script>
-  window.JOY_BACKEND  = "https://e-commercesalesagent.up.railway.app/";
+  window.JOY_BACKEND  = "https://jumia-agent.up.railway.app";
   window.JOY_COLOR    = "#6C63FF";
   window.JOY_NAME     = "Joy";
   window.JOY_STORE    = "our store";
