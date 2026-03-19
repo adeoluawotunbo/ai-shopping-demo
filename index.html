@@ -24,7 +24,7 @@
   --border: rgba(108,99,255,.15);
   --white:  #ffffff;
 }
-*:not(#joy-widget):not(#joy-widget *){box-sizing:border-box;margin:0;padding:0}
+*{box-sizing:border-box;margin:0;padding:0}
 body{
   background:var(--ink);
   color:var(--white);
@@ -33,13 +33,6 @@ body{
   min-height:100vh;
 }
 
-
-/* ── WIDGET ISOLATION — prevents page CSS bleeding into widget ─────────── */
-#joy-widget,#joy-widget *{
-  all:revert;
-  box-sizing:border-box;
-  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
-}
 /* ── NOISE TEXTURE OVERLAY ─────────────────────────────────────────────── */
 body::before{
   content:'';
@@ -358,7 +351,7 @@ footer a:hover{ color:var(--violet3); }
 </footer>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-const BACKEND = "https://e-commercesalesagent.up.railway.app/"; // ← replace with your neutral Railway URL
+const BACKEND = "https://e-commercesalesagent.up.railway.app/";
 
 // Load products
 async function loadProducts(){
@@ -434,8 +427,13 @@ loadProducts();
 
 <!-- JOY AI WIDGET -->
 <script>
-  window.JOY_BACKEND  = "https://e-commercesalesagent.up.railway.app/"; // ← same neutral URL
+  window.JOY_BACKEND  = "https://e-commercesalesagent.up.railway.app/";
   window.JOY_COLOR    = "#6C63FF";
   window.JOY_NAME     = "Joy";
   window.JOY_STORE    = "our store";
-  w
+  window.JOY_GREETING = "👋 Hi! I'm Joy, your AI Shopping Assistant. Tell me what you're looking for — I'll find the best options and prices for you!";
+</script>
+<script src="https://e-commercesalesagent.up.railway.app/widget.js"></script>
+
+</body>
+</html>
